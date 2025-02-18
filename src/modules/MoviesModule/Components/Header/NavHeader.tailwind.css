@@ -1,0 +1,13 @@
+.nav li {
+    @apply h-full content-center;
+}
+
+.nav li.active {
+    @apply border-b-4 border-white;
+    background: #0000 linear-gradient(180deg, #f6faff00, #ffffff38) 0 0
+        no-repeat padding-box;
+}
+
+.nav li.active-subheader {
+    @apply border-b-4 border-gray-700;
+}

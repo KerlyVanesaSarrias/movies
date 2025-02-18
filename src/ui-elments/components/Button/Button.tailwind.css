@@ -1,0 +1,23 @@
+.button {
+    @apply flex gap-1 rounded-md items-center h-fit justify-center;
+}
+
+.button-color--primary {
+    @apply bg-slate-900 hover:bg-slate-800 text-white;
+}
+
+.button-color--secondary {
+    @apply bg-slate-500 hover:bg-gray-700 text-white;
+}
+
+.button-color--tertiary {
+    @apply bg-red-500 hover:bg-red-400 text-white;
+}
+
+.button-size--medium {
+    @apply text-base px-4 py-2;
+}
+
+.button-size--small {
+    @apply text-sm px-2 py-1 rounded;
+}
