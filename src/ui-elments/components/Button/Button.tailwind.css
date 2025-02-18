@@ -3,7 +3,7 @@
 }
 
 .button-color--primary {
-    @apply bg-slate-900 hover:bg-slate-800 text-white;
+    @apply bg-green-700 hover:bg-green-600 text-white;
 }
 
 .button-color--secondary {

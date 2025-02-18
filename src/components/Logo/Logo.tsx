@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import LogoIMG from '../../assets/images/gallery-logo.png';
+import LogoIMG from '../../assets/images/kiwi_movies_logo.png';
 import { useNavigate } from 'react-router-dom';
 
 const Logo = () => {

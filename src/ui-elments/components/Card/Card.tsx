@@ -20,7 +20,7 @@ const Card = ({
     const cardClasses = classNames(
         'card',
         {
-            border: !noBorder,
+            'border dark:border-black': !noBorder,
             'p-4': !noPadding,
             'shadow-md': !noShadow,
         },
