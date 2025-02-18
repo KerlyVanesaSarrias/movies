@@ -1,16 +1,6 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { Logo } from '../../../components';
-import {
-    Button,
-    Input,
-    Card,
-    Text,
-    Carousel,
-} from '../../../ui-elments/components';
-import { CarouselImage } from '../../../ui-elments/components/Carousel/Carousel';
-import imageZero from '../../../assets/images/login-zero.jpg';
-import imageOne from '../../../assets/images/login-one.jpg';
-import imageTwo from '../../../assets/images/login-two.jpg';
+import { Button, Input, Card, Text } from '../../../ui-elments/components';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchLogin } from '../slices/UserSlice/userSlice';
@@ -18,25 +8,9 @@ import { AppDispatch } from '../../../store';
 import { RootState } from '../../../store/index';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import './LoginPage.tailwind.css';
 
 const LoginPage = () => {
-    const images = useMemo<CarouselImage[]>(() => {
-        return [
-            {
-                id: 0,
-                url: imageZero,
-            },
-            {
-                id: 1,
-                url: imageOne,
-            },
-            {
-                id: 2,
-                url: imageTwo,
-            },
-        ];
-    }, []);
-
     const { register, handleSubmit, formState } = useForm();
     const { errors } = formState;
     const user = useSelector((state: RootState) => state.user);
@@ -69,14 +43,14 @@ const LoginPage = () => {
     }, [navigate, user.isAuthenticated]);
 
     return (
-        <div className="relative w-full bg-gray-50 h-screen">
-            <div className="flex flex-col p-8 md:px-24 h-full">
-                <div className="w-40 brightness-0 mb-4">
+        <div className="relative login-bg">
+            <div className="flex bg-gradient-to-b from-black/70 to-black/0 flex-col p-8 md:px-24 h-full">
+                <div className="w-32 mb-4">
                     <Logo />
                 </div>
-                <Card noPadding className="h-full">
-                    <div className="flex flex-col sm:flex-row w-full h-full bg-white">
-                        <div className="sm:w-1/2 flex flex-col items-center w-full p-10 justify-center">
+                <div className="flex items-center w-full justify-center">
+                    <Card className="bg-[rgba(0,0,0,0.7)] w-full sm:w-3/4 md:max-w-96">
+                        <div className=" flex flex-col p-8 justify-center items-center">
                             <Text
                                 as="h1"
                                 size={'lg'}
@@ -87,7 +61,7 @@ const LoginPage = () => {
                             </Text>
                             <form
                                 onSubmit={handleSubmit(login)}
-                                className="flex flex-col gap-5 w-full md:w-[300px]"
+                                className="flex flex-col gap-8 w-full md:w-[300px]"
                             >
                                 <Input
                                     {...register('email', {
@@ -128,11 +102,8 @@ const LoginPage = () => {
                                 />
                             </form>
                         </div>
-                        <div className="w-full sm:w-1/2 h-full  bg-slate-900 flex items-center ">
-                            <Carousel images={images} enableAutoplay />
-                        </div>
-                    </div>
-                </Card>
+                    </Card>
+                </div>
             </div>
         </div>
     );

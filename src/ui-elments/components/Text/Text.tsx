@@ -25,7 +25,7 @@ const Text: React.FC<TextProps> = ({
             'text-lg': size === 'lg',
             'text-xl': size === 'xl',
 
-            'text-gray-900': color === 'default',
+            'text-gray-900 dark:text-white': color === 'default',
             'text-blue-500': color === 'primary',
             'text-gray-500': color === 'secondary',
             'text-red-500': color === 'error',
