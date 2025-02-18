@@ -52,7 +52,7 @@ const Header = ({
             </div>
             {!isAuthenticated && (
                 <Link to="/login">
-                    <Button size="small" color="secondary" label="Login" />
+                    <Button color="primary" label="Login" />
                 </Link>
             )}
             {isAuthenticated && (
