@@ -8,24 +8,39 @@ export const moviesApi = createApi({
     reducerPath: 'moviesApi',
     baseQuery: fetchBaseQuery({
         baseUrl: 'https://api.themoviedb.org/3',
+        prepareHeaders: (headers) => {
+            headers.set('accept', 'application/json');
+            headers.set('Authorization', `Bearer ${TOKEN}`);
+            return headers;
+        },
     }),
     endpoints: (builder) => ({
-        getMovies: builder.query<MoviesListResponse, { page: number }>({
-            query: ({ page }) => {
-                return {
-                    url: `/movie/popular`,
-                    params: {
-                        page,
-                        language: 'en-US',
-                    },
-                    headers: {
-                        accept: 'application/json',
-                        Authorization: `Bearer ${TOKEN}`,
-                    },
-                };
-            },
+        getMovies: builder.query<
+            MoviesListResponse,
+            { page: number; search?: string; genre?: string }
+        >({
+            query: ({ page, search, genre }) => ({
+                url: search ? '/search/movie' : '/discover/movie',
+                params: {
+                    page,
+                    query: search || undefined,
+                    with_genres: genre || undefined,
+                    language: 'en-US',
+                },
+            }),
+        }),
+        getGenres: builder.query<
+            { genres: { id: number; name: string }[] },
+            void
+        >({
+            query: () => ({
+                url: '/genre/movie/list',
+                params: {
+                    language: 'en-US',
+                },
+            }),
         }),
     }),
 });
 
-export const { useGetMoviesQuery } = moviesApi;
+export const { useGetMoviesQuery, useGetGenresQuery } = moviesApi;

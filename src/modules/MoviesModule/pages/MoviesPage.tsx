@@ -1,11 +1,19 @@
-import { memo, useEffect } from 'react';
-import { setTotalPages, nextPage, prevPage } from '../slices/paginationSlice';
+import { ChangeEvent, memo, useCallback, useEffect, useState } from 'react';
+import {
+    setTotalPages,
+    nextPage,
+    prevPage,
+    setCurrentPage,
+} from '../slices/paginationSlice';
 import { Button, Input, ThumbnailMedia } from '../../../ui-elments/components';
 import { Loader } from '../../../assets/images/Loader';
-import { useGetMoviesQuery } from '../slices/movieApi';
 import { useDispatch, useSelector } from 'react-redux';
+import { useGetMoviesQuery, useGetGenresQuery } from '../slices/movieApi';
 import { AppDispatch } from '../../../store';
+import { setGenre } from '../slices/filterSlice';
 import { RootState } from '../../../store';
+import { setQuery } from '../slices/searchSlice';
+import Select from '../../../ui-elments/components/Select/Select';
 
 const MoviesPage = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -13,14 +21,39 @@ const MoviesPage = () => {
     const { currentPage, totalPages } = useSelector(
         (state: RootState) => state.pagination
     );
+    const { selectedGenre } = useSelector((state: RootState) => state.filters);
+    const { query } = useSelector((state: RootState) => state.search);
+    const [debouncedQuery, setDebouncedQuery] = useState(query);
 
     const {
         isError,
         isLoading,
         data: movieData,
-    } = useGetMoviesQuery({ page: currentPage });
+    } = useGetMoviesQuery({
+        page: currentPage,
+        search: query,
+        genre: selectedGenre,
+    });
+
+    const { data: genresData } = useGetGenresQuery();
 
     // const user = useSelector((state: RootState) => state.user);
+
+    const handleSearchChange = useCallback(
+        (e: ChangeEvent<HTMLInputElement>) => {
+            dispatch(setCurrentPage(1));
+            setDebouncedQuery(e.target.value);
+        },
+        [dispatch]
+    );
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            dispatch(setQuery(debouncedQuery));
+        }, 500);
+
+        return () => clearTimeout(handler);
+    }, [debouncedQuery, dispatch]);
 
     useEffect(() => {
         if (movieData?.total_pages) {
@@ -44,15 +77,33 @@ const MoviesPage = () => {
 
     return (
         <div className="w-full h-full flex flex-col py-8 px-8 sm:px-14 md:px-16 gap-4">
-            <div className="flex">
-                <div className="w-1/2">
-                    <Input
-                        label="Search"
-                        type="search"
-                        placeholder="Search for a movie"
-                    />
+            <div className="flex justify-between  w-full">
+                <div className="flex gap-5 w-1/2 ">
+                    <div className="w-full">
+                        <Input
+                            label="Search"
+                            type="text"
+                            placeholder="Search for a movie"
+                            value={debouncedQuery}
+                            onChange={handleSearchChange}
+                        />
+                    </div>
+                    <div className="pt-5">
+                        <Select
+                            value={selectedGenre}
+                            onChange={(e) => dispatch(setGenre(e.target.value))}
+                            options={[
+                                { value: '', label: 'All Genres' },
+                                ...(genresData?.genres.map((genre) => ({
+                                    value: genre.id.toString(),
+                                    label: genre.name,
+                                })) || []),
+                            ]}
+                        />
+                    </div>
                 </div>
-                <div className="text-white w-1/2 flex items-center justify-end gap-5">
+
+                <div className="dark_text flex items-center  gap-5">
                     <Button
                         color="secondary"
                         label="Previous"

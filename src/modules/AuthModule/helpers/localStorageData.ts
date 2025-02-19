@@ -1,4 +1,3 @@
-import { MediaItem } from '../../MoviesModule/slices/GalerySlice/gallerySlice';
 import { User } from '../slices/UserSlice/userSlice';
 
 export const USER_KEY = 'user';
@@ -14,17 +13,4 @@ export const getUserAuthenticatedLS = (): User | null => {
 
 export const clearUserAuthenticatedLS = () => {
     localStorage.removeItem(USER_KEY);
-};
-
-export const setFavoritesLS = (media: MediaItem[]) => {
-    localStorage.setItem(FAVORITIES_KEY, JSON.stringify(media));
-};
-
-export const getFavotiresLS = () => {
-    const media = localStorage.getItem(FAVORITIES_KEY);
-    return media ? JSON.parse(media) : [];
-};
-
-export const clearFavoritesLS = () => {
-    localStorage.removeItem(FAVORITIES_KEY);
 };
