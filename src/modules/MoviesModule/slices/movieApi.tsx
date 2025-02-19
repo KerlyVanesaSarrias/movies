@@ -17,14 +17,23 @@ export const moviesApi = createApi({
     endpoints: (builder) => ({
         getMovies: builder.query<
             MoviesListResponse,
-            { page: number; search?: string; genre?: string }
+            {
+                page: number;
+                search?: string;
+                genre?: string;
+                releaseYear?: string;
+                rating?: string;
+            }
         >({
-            query: ({ page, search, genre }) => ({
+            query: ({ page, search, genre, releaseYear, rating }) => ({
                 url: search ? '/search/movie' : '/discover/movie',
                 params: {
                     page,
                     query: search || undefined,
                     with_genres: genre || undefined,
+                    primary_release_year: releaseYear || undefined,
+                    'vote_average.gte': rating ? Number(rating) : undefined,
+                    sort_by: 'popularity.desc',
                     language: 'en-US',
                 },
             }),

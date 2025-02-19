@@ -10,7 +10,7 @@ import { Loader } from '../../../assets/images/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { useGetMoviesQuery, useGetGenresQuery } from '../slices/movieApi';
 import { AppDispatch } from '../../../store';
-import { setGenre } from '../slices/filterSlice';
+import { setGenre, setReleaseYear, setRating } from '../slices/filterSlice';
 import { RootState } from '../../../store';
 import { setQuery } from '../slices/searchSlice';
 import Select from '../../../ui-elments/components/Select/Select';
@@ -22,7 +22,9 @@ const MoviesPage = () => {
     const { currentPage, totalPages } = useSelector(
         (state: RootState) => state.pagination
     );
-    const { selectedGenre } = useSelector((state: RootState) => state.filters);
+    const { selectedGenre, releaseYear, rating } = useSelector(
+        (state: RootState) => state.filters
+    );
     const { query } = useSelector((state: RootState) => state.search);
     const [debouncedQuery, setDebouncedQuery] = useState(query);
     const navigate = useNavigate();
@@ -35,6 +37,8 @@ const MoviesPage = () => {
         page: currentPage,
         search: query,
         genre: selectedGenre,
+        releaseYear: releaseYear || undefined,
+        rating: rating || undefined,
     });
 
     const { data: genresData } = useGetGenresQuery();
@@ -90,7 +94,7 @@ const MoviesPage = () => {
                             onChange={handleSearchChange}
                         />
                     </div>
-                    <div className="pt-5">
+                    <div className=" flex gap-4 pt-5">
                         <Select
                             value={selectedGenre}
                             onChange={(e) => dispatch(setGenre(e.target.value))}
@@ -100,6 +104,35 @@ const MoviesPage = () => {
                                     value: genre.id.toString(),
                                     label: genre.name,
                                 })) || []),
+                            ]}
+                        />
+                        <Select
+                            value={releaseYear}
+                            onChange={(e) =>
+                                dispatch(setReleaseYear(e.target.value))
+                            }
+                            options={[
+                                { value: '', label: 'All Years' },
+                                ...Array.from({ length: 50 }, (_, i) => {
+                                    const year = new Date().getFullYear() - i;
+                                    return {
+                                        value: year.toString(),
+                                        label: year.toString(),
+                                    };
+                                }),
+                            ]}
+                        />
+                        <Select
+                            value={rating}
+                            onChange={(e) =>
+                                dispatch(setRating(e.target.value))
+                            }
+                            options={[
+                                { value: '', label: 'All Ratings' },
+                                ...Array.from({ length: 10 }, (_, i) => ({
+                                    value: (i + 1).toString(),
+                                    label: `${i + 1}+`,
+                                })),
                             ]}
                         />
                     </div>

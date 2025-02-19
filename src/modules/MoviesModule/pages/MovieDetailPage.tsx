@@ -27,7 +27,7 @@ const MovieDetail = () => {
     }
 
     return (
-        <div className="w-full min-h-screen flex flex-col items-center justify-center bg-gray-900 dark_text py-10">
+        <div className="w-full min-h-screen flex flex-col items-center justify-center bg-gray-900 dark_textP py-10">
             <div className="max-w-4xl">
                 <img
                     className="rounded-lg w-full"
