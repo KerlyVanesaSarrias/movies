@@ -56,6 +56,11 @@ const MoviesPage = () => {
     useEffect(() => {
         const handler = setTimeout(() => {
             dispatch(setQuery(debouncedQuery));
+            if (debouncedQuery.length > 0) {
+                dispatch(setGenre(''));
+                dispatch(setReleaseYear(''));
+                dispatch(setRating(''));
+            }
         }, 500);
 
         return () => clearTimeout(handler);
@@ -129,9 +134,9 @@ const MoviesPage = () => {
                             }
                             options={[
                                 { value: '', label: 'All Ratings' },
-                                ...Array.from({ length: 10 }, (_, i) => ({
+                                ...Array.from({ length: 5 }, (_, i) => ({
                                     value: (i + 1).toString(),
-                                    label: `${i + 1}+`,
+                                    label: `${i + 1} ⭐`,
                                 })),
                             ]}
                         />
@@ -175,6 +180,7 @@ const MoviesPage = () => {
                                 onFavoriteClick={() => alert('favotire')}
                                 isFavorite={false}
                                 title={title}
+                                rating={item.vote_average}
                             />
                         </div>
                     );

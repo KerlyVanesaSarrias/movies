@@ -2,6 +2,7 @@ import { memo, MouseEvent } from 'react';
 import { Card } from '../Card';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 import { HeartIcon } from '@heroicons/react/24/outline';
+import Rating from '../Rating/Rating';
 
 interface ThumbnailMediaProps {
     thumbnail: string;
@@ -9,11 +10,13 @@ interface ThumbnailMediaProps {
     onFavoriteClick: (isFavorite: boolean) => void;
     onClick?: () => void;
     title?: string;
+    rating?: number;
 }
 
 const ThumbnailMedia = ({
     thumbnail,
     isFavorite = false,
+    rating = 0,
     onFavoriteClick,
     onClick,
 }: ThumbnailMediaProps) => {
@@ -30,7 +33,7 @@ const ThumbnailMedia = ({
             <div
                 onClick={handleClick}
                 role="button"
-                className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/0"
+                className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/0 "
             >
                 {isFavorite ? (
                     <button
@@ -51,6 +54,7 @@ const ThumbnailMedia = ({
                         <HeartIcon className="size-7 hover:size-8 absolute right-1 top-1 text-white font-extrabold z-20 cursor-pointer" />
                     </button>
                 )}
+                <Rating className=" " rating={rating} />
             </div>
             <img className="size-full object-cover" src={thumbnail} />
         </Card>

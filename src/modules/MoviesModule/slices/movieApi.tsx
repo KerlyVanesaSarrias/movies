@@ -25,18 +25,23 @@ export const moviesApi = createApi({
                 rating?: string;
             }
         >({
-            query: ({ page, search, genre, releaseYear, rating }) => ({
-                url: search ? '/search/movie' : '/discover/movie',
-                params: {
-                    page,
-                    query: search || undefined,
-                    with_genres: genre || undefined,
-                    primary_release_year: releaseYear || undefined,
-                    'vote_average.gte': rating ? Number(rating) : undefined,
-                    sort_by: 'popularity.desc',
-                    language: 'en-US',
-                },
-            }),
+            query: ({ page, search, genre, releaseYear, rating }) => {
+                const minRating = rating ? Number(rating) * 2 : undefined;
+                const maxRating = minRating ? minRating + 1.9 : undefined;
+                return {
+                    url: search ? '/search/movie' : '/discover/movie',
+                    params: {
+                        page,
+                        query: search || undefined,
+                        with_genres: genre || undefined,
+                        primary_release_year: releaseYear || undefined,
+                        'vote_average.gte': minRating,
+                        'vote_average.lte': maxRating,
+                        language: 'en-US',
+                        sort_by: 'popularity.desc',
+                    },
+                };
+            },
         }),
 
         getGenres: builder.query<

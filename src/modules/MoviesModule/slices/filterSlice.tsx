@@ -25,8 +25,14 @@ const filtersSlice = createSlice({
         setRating: (state, action: PayloadAction<string>) => {
             state.rating = action.payload;
         },
+        resetFilters: (state) => {
+            state.selectedGenre = '';
+            state.releaseYear = '';
+            state.rating = '';
+        },
     },
 });
 
-export const { setGenre, setReleaseYear, setRating } = filtersSlice.actions;
+export const { setGenre, setReleaseYear, setRating, resetFilters } =
+    filtersSlice.actions;
 export default filtersSlice.reducer;
