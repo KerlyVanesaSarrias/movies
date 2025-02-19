@@ -14,6 +14,7 @@ import { setGenre } from '../slices/filterSlice';
 import { RootState } from '../../../store';
 import { setQuery } from '../slices/searchSlice';
 import Select from '../../../ui-elments/components/Select/Select';
+import { useNavigate } from 'react-router-dom';
 
 const MoviesPage = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -24,6 +25,7 @@ const MoviesPage = () => {
     const { selectedGenre } = useSelector((state: RootState) => state.filters);
     const { query } = useSelector((state: RootState) => state.search);
     const [debouncedQuery, setDebouncedQuery] = useState(query);
+    const navigate = useNavigate();
 
     const {
         isError,
@@ -129,13 +131,19 @@ const MoviesPage = () => {
                     // );
 
                     return (
-                        <ThumbnailMedia
+                        <div
                             key={id}
-                            thumbnail={`https://image.tmdb.org/t/p/w500${poster_path}`}
-                            onFavoriteClick={() => alert('favotire')}
-                            isFavorite={false}
-                            title={title}
-                        />
+                            className="cursor-pointer"
+                            onClick={() => navigate(`/movie/${id}`)}
+                        >
+                            <ThumbnailMedia
+                                key={id}
+                                thumbnail={`https://image.tmdb.org/t/p/w500${poster_path}`}
+                                onFavoriteClick={() => alert('favotire')}
+                                isFavorite={false}
+                                title={title}
+                            />
+                        </div>
                     );
                 })}
             </div>

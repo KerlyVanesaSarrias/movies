@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { MoviesListResponse } from '../types';
+import { MovieDetail, MoviesListResponse } from '../types';
 
 const TOKEN =
     'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzZDUwMGFmZGY1ZTkwZWI2ZjcwM2Y1MjE0OWMxOTE5ZSIsIm5iZiI6MTczOTg5NjIwMC44MTksInN1YiI6IjY3YjRiNTg4MGQ4N2I0ZGNjYjZkYTg4ZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Wt6EzOLs8mMeI55vbscbSkfQW4XryV_iW9xy2A6m8XA';
@@ -29,6 +29,7 @@ export const moviesApi = createApi({
                 },
             }),
         }),
+
         getGenres: builder.query<
             { genres: { id: number; name: string }[] },
             void
@@ -40,7 +41,17 @@ export const moviesApi = createApi({
                 },
             }),
         }),
+
+        getMovieDetail: builder.query<MovieDetail, unknown>({
+            query: (movieId) => ({
+                url: `/movie/${movieId}`,
+                params: {
+                    language: 'en-US',
+                },
+            }),
+        }),
     }),
 });
 
-export const { useGetMoviesQuery, useGetGenresQuery } = moviesApi;
+export const { useGetMoviesQuery, useGetGenresQuery, useGetMovieDetailQuery } =
+    moviesApi;

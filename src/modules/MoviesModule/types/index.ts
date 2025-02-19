@@ -21,3 +21,18 @@ export interface MoviesListResponse {
     total_results: number;
     results: Movie[];
 }
+
+export interface MovieDetail {
+    id: number;
+    genres: [];
+    homepage: string;
+    original_language: 'en' | 'es';
+    title: string;
+    overview: string;
+    popularity: number;
+    poster_path: string;
+    production_companies: [];
+    production_countries: [];
+    release_date: string;
+    spoken_languages: [];
+}
