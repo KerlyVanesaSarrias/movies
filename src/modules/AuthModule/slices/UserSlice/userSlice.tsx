@@ -1,11 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { MediaItem } from '../../../MoviesModule/slices/GalerySlice/gallerySlice';
 import { USER } from '../../../MoviesModule/constants';
 import {
     clearUserAuthenticatedLS,
-    getFavotiresLS,
     getUserAuthenticatedLS,
-    setFavoritesLS,
     setUserAuthenticatedLS,
 } from '../../helpers/localStorageData';
 
@@ -19,7 +16,6 @@ interface UserState {
     isAuthenticated: boolean;
     isLoading: boolean;
     error: string | null;
-    myFavoritesMedia: MediaItem[];
 }
 
 const initialState: UserState = {
@@ -27,7 +23,6 @@ const initialState: UserState = {
     isAuthenticated: getUserAuthenticatedLS() ? true : false,
     isLoading: false,
     error: null,
-    myFavoritesMedia: getUserAuthenticatedLS() ? (getFavotiresLS() ?? []) : [],
 };
 
 interface LoginResponse {
@@ -73,23 +68,6 @@ export const userSlice = createSlice({
             state.isLoading = false;
             state.isAuthenticated = false;
             state.user = null;
-            state.myFavoritesMedia = [];
-        },
-        setFavoritesMedia(
-            state,
-            action: PayloadAction<{ isFavorite: boolean; media: MediaItem }>
-        ) {
-            const { isFavorite, media } = action.payload;
-            if (isFavorite) {
-                state.myFavoritesMedia.push(media);
-            } else {
-                state.myFavoritesMedia = state.myFavoritesMedia.filter(
-                    (item) => {
-                        return item.id !== media.id;
-                    }
-                );
-            }
-            setFavoritesLS(state.myFavoritesMedia);
         },
     },
     extraReducers: (builder) => {
@@ -108,9 +86,6 @@ export const userSlice = createSlice({
                     state.error = action.payload.success
                         ? null
                         : 'Invalid email or password';
-                    state.myFavoritesMedia = action.payload.success
-                        ? getFavotiresLS()
-                        : [];
                 }
             );
     },

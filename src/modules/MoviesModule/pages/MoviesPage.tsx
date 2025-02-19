@@ -1,55 +1,65 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../../store';
-import { memo, useEffect } from 'react';
+import { ChangeEvent, memo, useCallback, useEffect, useState } from 'react';
 import {
-    fetchGallery,
-    galleryActions,
-    MediaItem,
-} from '../slices/GalerySlice/gallerySlice';
-import { ThumbnailMedia } from '../../../ui-elments/components';
+    setTotalPages,
+    nextPage,
+    prevPage,
+    setCurrentPage,
+} from '../slices/paginationSlice';
+import { Button, Input, ThumbnailMedia } from '../../../ui-elments/components';
 import { Loader } from '../../../assets/images/Loader';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { userActions } from '../../AuthModule/slices/UserSlice/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { useGetMoviesQuery, useGetGenresQuery } from '../slices/movieApi';
+import { AppDispatch } from '../../../store';
+import { setGenre } from '../slices/filterSlice';
+import { RootState } from '../../../store';
+import { setQuery } from '../slices/searchSlice';
+import Select from '../../../ui-elments/components/Select/Select';
 
 const MoviesPage = () => {
-    const category = 'all';
-    const { pathname } = useLocation();
+    const dispatch = useDispatch<AppDispatch>();
 
-    const { error, isLoading, media, selectedMedia } = useSelector(
-        (state: RootState) => state.gallery
+    const { currentPage, totalPages } = useSelector(
+        (state: RootState) => state.pagination
+    );
+    const { selectedGenre } = useSelector((state: RootState) => state.filters);
+    const { query } = useSelector((state: RootState) => state.search);
+    const [debouncedQuery, setDebouncedQuery] = useState(query);
+
+    const {
+        isError,
+        isLoading,
+        data: movieData,
+    } = useGetMoviesQuery({
+        page: currentPage,
+        search: query,
+        genre: selectedGenre,
+    });
+
+    const { data: genresData } = useGetGenresQuery();
+
+    // const user = useSelector((state: RootState) => state.user);
+
+    const handleSearchChange = useCallback(
+        (e: ChangeEvent<HTMLInputElement>) => {
+            dispatch(setCurrentPage(1));
+            setDebouncedQuery(e.target.value);
+        },
+        [dispatch]
     );
 
-    const dispatch = useDispatch<AppDispatch>();
-    const user = useSelector((state: RootState) => state.user);
-    const navigate = useNavigate();
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            dispatch(setQuery(debouncedQuery));
+        }, 500);
 
-    const handleCheckboxChange =
-        (mediaItem: MediaItem) => (isChecked: boolean) => {
-            dispatch(
-                galleryActions.toggleMediaSelection({
-                    isChecked,
-                    media: mediaItem,
-                })
-            );
-        };
+        return () => clearTimeout(handler);
+    }, [debouncedQuery, dispatch]);
 
-    const handleFavoriteClick = (item: MediaItem) => (isFavorite: boolean) => {
-        if (!user.isAuthenticated) {
-            toast.warning('You must be login to add to favorites');
-            navigate('/login');
-            return;
+    useEffect(() => {
+        if (movieData?.total_pages) {
+            dispatch(setTotalPages(movieData.total_pages));
         }
-        dispatch(userActions.setFavoritesMedia({ isFavorite, media: item }));
-    };
-
-    useEffect(() => {
-        dispatch(fetchGallery(category));
-    }, [category, dispatch]);
-
-    useEffect(() => {
-        if (pathname) dispatch(galleryActions.clearSelectedMedia());
-    }, [dispatch, pathname]);
+    }, [movieData, dispatch]);
 
     if (isLoading) {
         return (
@@ -61,32 +71,70 @@ const MoviesPage = () => {
         );
     }
 
-    if (error) {
-        return <h1>Error: {error}</h1>;
+    if (isError) {
+        return <h1>Error: loading movies</h1>;
     }
 
     return (
         <div className="w-full h-full flex flex-col py-8 px-8 sm:px-14 md:px-16 gap-4">
-            <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 bg-gray-50">
-                {media.map((item) => {
-                    const { thumbnail, type, id } = item;
-                    const isFavorite = user.myFavoritesMedia.some(
-                        (item) => item.id === id
-                    );
+            <div className="flex justify-between  w-full">
+                <div className="flex gap-5 w-1/2 ">
+                    <div className="w-full">
+                        <Input
+                            label="Search"
+                            type="text"
+                            placeholder="Search for a movie"
+                            value={debouncedQuery}
+                            onChange={handleSearchChange}
+                        />
+                    </div>
+                    <div className="pt-5">
+                        <Select
+                            value={selectedGenre}
+                            onChange={(e) => dispatch(setGenre(e.target.value))}
+                            options={[
+                                { value: '', label: 'All Genres' },
+                                ...(genresData?.genres.map((genre) => ({
+                                    value: genre.id.toString(),
+                                    label: genre.name,
+                                })) || []),
+                            ]}
+                        />
+                    </div>
+                </div>
 
-                    const isChecked = selectedMedia.some(
-                        (item) => item.id === id
-                    );
+                <div className="dark_text flex items-center  gap-5">
+                    <Button
+                        color="secondary"
+                        label="Previous"
+                        onClick={() => dispatch(prevPage())}
+                        disabled={currentPage === 1}
+                    />
+                    <span>
+                        Página {currentPage} de {totalPages}
+                    </span>
+                    <Button
+                        color="secondary"
+                        label="Next"
+                        onClick={() => dispatch(nextPage())}
+                        disabled={currentPage >= totalPages}
+                    />
+                </div>
+            </div>
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-5">
+                {movieData?.results.map((item) => {
+                    const { poster_path, id, title } = item;
+                    // const isFavorite = user.myFavoritesMedia.some(
+                    //     (item) => item.id === id
+                    // );
 
                     return (
                         <ThumbnailMedia
                             key={id}
-                            thumbnail={thumbnail}
-                            type={type}
-                            onFavoriteClick={handleFavoriteClick(item)}
-                            onCheckboxChange={handleCheckboxChange(item)}
-                            isFavorite={isFavorite}
-                            isChecked={isChecked}
+                            thumbnail={`https://image.tmdb.org/t/p/w500${poster_path}`}
+                            onFavoriteClick={() => alert('favotire')}
+                            isFavorite={false}
+                            title={title}
                         />
                     );
                 })}

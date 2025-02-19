@@ -1,7 +1,11 @@
 import classNames from 'classnames';
 import React, { memo, useState } from 'react';
 import './Input.tailwind.css';
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/16/solid';
+import {
+    EyeIcon,
+    EyeSlashIcon,
+    MagnifyingGlassIcon,
+} from '@heroicons/react/16/solid';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     label: string;
@@ -79,6 +83,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                             ) : (
                                 <EyeIcon className="h-5 w-5" />
                             )}
+                        </button>
+                    )}
+                    {type === 'search' && (
+                        <button className="absolute  top-[5px] right-2">
+                            <MagnifyingGlassIcon className="h-8 w-8" />
                         </button>
                     )}
                 </div>

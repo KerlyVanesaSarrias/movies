@@ -13,7 +13,7 @@ const Logo = () => {
         <div className="flex sm:h-full sm:w-full w-3/4 h-3/4">
             <img
                 src={LogoIMG}
-                alt="Gallery logo"
+                alt="Kiwi movies logo"
                 onClick={handleClick}
                 role="button"
             />
