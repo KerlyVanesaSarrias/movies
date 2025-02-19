@@ -41,6 +41,7 @@ export default tseslint.config(
         "error",
         {
           "printWidth": 80,
+          "endOfLine": "lf",
           "semi": true,
           "singleQuote": true,
           "tabWidth": 4,
