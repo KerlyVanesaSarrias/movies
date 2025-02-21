@@ -18,8 +18,6 @@ const NavHeader = ({ navItems }: NavHeaderProps) => {
 
     const liActiveClasses = classNames('active');
 
-    const liClasses = classNames('hover:!text-gray-500');
-
     const matchPathnames = (path: string) => {
         return location.pathname === path;
     };
@@ -32,7 +30,7 @@ const NavHeader = ({ navItems }: NavHeaderProps) => {
                     return (
                         <li
                             key={label}
-                            className={`${liClasses} ${
+                            className={`${
                                 matchPathnames(path) ? liActiveClasses : ''
                             }`}
                         >

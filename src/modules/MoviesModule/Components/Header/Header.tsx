@@ -55,7 +55,7 @@ const Header = ({
     };
 
     return (
-        <div className="flex justify-between gap-2 w-full h-20 bg-gray-950 px-8 items-center">
+        <div className="flex justify-between gap-2 w-full h-20 bg-gray-500 dark:bg-gray-950 px-8 items-center">
             <div className="h-full w-1/4 flex">
                 <Logo />
                 <div className="hidden md:flex gap-4 h-full items-center">

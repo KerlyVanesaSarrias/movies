@@ -1,11 +1,7 @@
 .nav li {
-    @apply h-full content-center;
+    @apply h-full content-center dark:hover:!text-gray-500 hover:!text-green-500 font-medium;
 }
 
 .nav li.active {
-    @apply border-b-2 border-slate-800;
-}
-
-.nav li.active-subheader {
-    @apply border-b-4 border-gray-700;
+    @apply border-b-2 !text-white dark:border-slate-800 border-white;
 }

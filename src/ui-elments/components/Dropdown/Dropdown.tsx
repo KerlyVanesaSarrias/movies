@@ -7,9 +7,15 @@ interface DropdownProps {
     label: string;
     isRounded?: boolean;
     items: DropdownItemProps[];
+    color?: 'primary' | 'secondary' | 'tertiary';
 }
 
-const Dropdown = ({ label, isRounded = false, items }: DropdownProps) => {
+const Dropdown = ({
+    label,
+    isRounded = false,
+    items,
+    color = 'primary',
+}: DropdownProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -48,7 +54,7 @@ const Dropdown = ({ label, isRounded = false, items }: DropdownProps) => {
                     aria-haspopup="true"
                     label={label}
                     onClick={toggleDropdown}
-                    color="secondary"
+                    color={color}
                     size="small"
                     iconRight={
                         !isRounded ? (
