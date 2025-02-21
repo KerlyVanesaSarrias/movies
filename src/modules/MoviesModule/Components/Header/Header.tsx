@@ -1,4 +1,3 @@
-import { Logo } from '../../../../components';
 import NavHeader, { NavItem } from './NavHeader';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -8,6 +7,7 @@ import { AppDispatch } from '../../../../store';
 import { userActions } from '../../../AuthModule/slices/UserSlice/userSlice';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/16/solid';
 import { Button, Dropdown } from '../../../../ui-elments/components';
+import { Logo } from '../../../../components';
 
 interface HeaderProps {
     navItems: NavItem[];
@@ -45,11 +45,14 @@ const Header = ({
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
     return (
-        <div className="flex justify-between gap-2 w-full h-20 bg-slate-900 px-8 items-center">
-            <Logo />
-            <div className="hidden md:flex gap-4 h-full items-center">
-                <NavHeader navItems={navItems} />
+        <div className="flex justify-between gap-2 w-full h-20 bg-gray-950 px-8 items-center">
+            <div className="h-full w-1/4 flex">
+                <Logo />
+                <div className="hidden md:flex gap-4 h-full items-center">
+                    <NavHeader navItems={navItems} />
+                </div>
             </div>
+
             {!isAuthenticated && (
                 <Link to="/login">
                     <Button color="primary" label="Login" />

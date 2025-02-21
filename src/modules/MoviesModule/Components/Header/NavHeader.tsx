@@ -23,8 +23,8 @@ const NavHeader = ({ navItems, subHeader = false }: NavHeaderProps) => {
     });
 
     const liClasses = classNames({
-        'hover:!bg-gray-700': !subHeader,
-        'hover:!bg-gray-200': subHeader,
+        'hover:!text-gray-500': !subHeader,
+        'hover:!text-gray-200': subHeader,
     });
 
     const matchPathnames = (path: string) => {

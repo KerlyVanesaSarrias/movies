@@ -10,7 +10,7 @@ const AppRouter = () => {
             <Routes>
                 <Route path="/*" element={<MoviesModuleRouter />} />
                 <Route path="/login/*" element={<AuthModuleRouter />} />
-                <Route path="/movie/:id" element={<MovieDetail />} />
+                <Route path="/movie/:id/" element={<MovieDetail />} />
                 <Route path="*" element={<PageError />} />
             </Routes>
         </BrowserRouter>
