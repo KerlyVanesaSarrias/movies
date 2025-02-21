@@ -8,7 +8,12 @@ import {
 import { Button, Input, ThumbnailMedia } from '../../../ui-elments/components';
 import { Loader } from '../../../assets/images/Loader';
 import { useDispatch, useSelector } from 'react-redux';
-import { useGetMoviesQuery, useGetGenresQuery } from '../slices/movieApi';
+import {
+    useGetMoviesQuery,
+    useGetGenresQuery,
+    useToggleFavoriteMutation,
+    useGetFavoritesQuery,
+} from '../slices/movieApi';
 import { AppDispatch } from '../../../store';
 import { setGenre, setReleaseYear, setRating } from '../slices/filterSlice';
 import { RootState } from '../../../store';
@@ -30,6 +35,8 @@ const MoviesPage = () => {
     const [debouncedQuery, setDebouncedQuery] = useState(query);
     const navigate = useNavigate();
 
+    const [toggleFavorite] = useToggleFavoriteMutation();
+
     const {
         isError,
         isLoading,
@@ -42,6 +49,8 @@ const MoviesPage = () => {
         rating: rating || undefined,
     });
 
+    const { data: favoriteList } = useGetFavoritesQuery();
+
     const { data: genresData } = useGetGenresQuery();
 
     // const user = useSelector((state: RootState) => state.user);
@@ -52,6 +61,13 @@ const MoviesPage = () => {
             setDebouncedQuery(e.target.value);
         },
         [dispatch]
+    );
+
+    const handleFavoriteClick = useCallback(
+        (movieId: number, isFavorite: boolean) => {
+            toggleFavorite({ movieId, favorite: isFavorite });
+        },
+        [toggleFavorite]
     );
 
     useEffect(() => {
@@ -165,9 +181,9 @@ const MoviesPage = () => {
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-5">
                 {movieData?.results.map((item) => {
                     const { poster_path, id, title } = item;
-                    // const isFavorite = user.myFavoritesMedia.some(
-                    //     (item) => item.id === id
-                    // );
+                    const isFavorite = favoriteList?.results.some(
+                        (favoriteItem) => favoriteItem.id === id
+                    );
 
                     return (
                         <div
@@ -176,11 +192,13 @@ const MoviesPage = () => {
                             onClick={() => navigate(`/movie/${id}`)}
                         >
                             <ThumbnailMedia
+                                isFavorite={isFavorite}
                                 key={id}
                                 thumbnail={`https://image.tmdb.org/t/p/w500${poster_path}`}
                                 movieId={item.id}
                                 title={title}
                                 rating={item.vote_average}
+                                onFavoriteClick={handleFavoriteClick}
                             />
                         </div>
                     );

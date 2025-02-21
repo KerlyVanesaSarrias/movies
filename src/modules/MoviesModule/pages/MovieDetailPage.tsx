@@ -28,7 +28,7 @@ const MovieDetail = () => {
 
     return (
         <div className="w-full flex flex-col items-center justify-center bg-gray-900 dark_text py-10">
-            <div className="w-full p-4 md:max-w-4xl md:px-0 flex gap-4">
+            <div className="w-full p-4 md:max-w-4xl flex gap-4 justify-center">
                 <div className="w-1/2 md:w-4/12">
                     <img
                         className="rounded-lg w-full"
