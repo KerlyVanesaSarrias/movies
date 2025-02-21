@@ -11,7 +11,6 @@
     "tailwindcss": "npx tailwindcss -i ./src/index.css -o ./src/styles.css --watch"
   },
   "dependencies": {
-    "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
     "@reduxjs/toolkit": "^2.5.0",
     "axios": "^1.7.9",

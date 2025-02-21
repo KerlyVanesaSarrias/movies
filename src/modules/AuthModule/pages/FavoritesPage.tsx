@@ -7,11 +7,15 @@ import {
     useToggleFavoriteMutation,
 } from '../../MoviesModule/slices/movieApi';
 import { RootState } from '../../../store';
+import { useNavigate } from 'react-router-dom';
 
 const FavoritesPage = () => {
     const isAuthenticated = useSelector(
         (state: RootState) => state.user.isAuthenticated
     );
+
+    const navigate = useNavigate();
+
     const { data, isLoading, isError } = useGetFavoritesQuery(
         isAuthenticated ? undefined : skipToken
     );
@@ -41,7 +45,7 @@ const FavoritesPage = () => {
 
     return (
         <div className="w-full h-full flex flex-col py-8 px-8 sm:px-14 md:px-16 gap-4">
-            <h1 className="text-white text-2xl font-bold">
+            <h1 className="dark_text text-2xl font-bold">
                 My Favorite Movies ❤️
             </h1>
             {data.results.length === 0 ? (
@@ -49,17 +53,23 @@ const FavoritesPage = () => {
             ) : (
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-5">
                     {data.results.map((movie) => (
-                        <ThumbnailMedia
-                            isFavorite
+                        <div
                             key={movie.id}
-                            movieId={movie.id}
-                            thumbnail={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                            title={movie.title}
-                            rating={movie.vote_average}
-                            onFavoriteClick={() =>
-                                handleRemoveFavorite(movie.id)
-                            }
-                        />
+                            className="cursor-pointer"
+                            onClick={() => navigate(`/movie/${movie.id}`)}
+                        >
+                            <ThumbnailMedia
+                                isFavorite
+                                key={movie.id}
+                                movieId={movie.id}
+                                thumbnail={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                                title={movie.title}
+                                rating={movie.vote_average}
+                                onFavoriteClick={() =>
+                                    handleRemoveFavorite(movie.id)
+                                }
+                            />
+                        </div>
                     ))}
                 </div>
             )}

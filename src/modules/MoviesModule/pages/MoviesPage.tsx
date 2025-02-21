@@ -53,8 +53,6 @@ const MoviesPage = () => {
 
     const { data: genresData } = useGetGenresQuery();
 
-    // const user = useSelector((state: RootState) => state.user);
-
     const handleSearchChange = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
             dispatch(setCurrentPage(1));
@@ -84,6 +82,11 @@ const MoviesPage = () => {
     }, [debouncedQuery, dispatch]);
 
     useEffect(() => {
+        dispatch(setQuery(''));
+        setDebouncedQuery('');
+    }, [selectedGenre, releaseYear, rating, dispatch]);
+
+    useEffect(() => {
         if (movieData?.total_pages) {
             dispatch(setTotalPages(movieData.total_pages));
         }
@@ -105,9 +108,9 @@ const MoviesPage = () => {
 
     return (
         <div className="w-full h-full flex flex-col py-8 px-8 sm:px-14 md:px-16 gap-4">
-            <div className="flex justify-between  w-full">
-                <div className="flex gap-5 w-1/2 ">
-                    <div className="w-full">
+            <div className="flex justify-between w-full flex-col lg:flex-row">
+                <div className="flex flex-wrap gap-5">
+                    <div className="w-full sm:w-64">
                         <Input
                             label="Search"
                             type="text"
@@ -116,7 +119,7 @@ const MoviesPage = () => {
                             onChange={handleSearchChange}
                         />
                     </div>
-                    <div className=" flex gap-4 pt-5">
+                    <div className="flex gap-4 items-end justify-center w-full sm:w-auto">
                         <Select
                             value={selectedGenre}
                             onChange={(e) => dispatch(setGenre(e.target.value))}
@@ -160,14 +163,14 @@ const MoviesPage = () => {
                     </div>
                 </div>
 
-                <div className="dark_text flex items-center  gap-5">
+                <div className="dark_text flex justify-center items-end gap-5 mt-4 lg:mt-0">
                     <Button
                         label={<FaChevronLeft />}
                         color="secondary"
                         onClick={() => dispatch(prevPage())}
                         disabled={currentPage === 1}
                     />
-                    <span>
+                    <span className="pb-1">
                         Page {currentPage} of {totalPages}
                     </span>
                     <Button

@@ -72,7 +72,7 @@ export const moviesApi = createApi({
             query: () => {
                 const user = getUserAuthenticatedLS();
                 if (!user) {
-                    toast.warning('User not authenticated');
+                    throw new Error('User not authenticated');
                 }
                 return {
                     url: '/account/21826861/favorite/movies',
@@ -89,7 +89,9 @@ export const moviesApi = createApi({
             query: ({ movieId, favorite }) => {
                 const user = getUserAuthenticatedLS();
                 if (!user) {
-                    toast.warning('You need login to view this page');
+                    toast.warning(
+                        'You need login to add this movie to favorites'
+                    );
                 }
                 return {
                     url: `/account/${user?.email}/favorite`,
