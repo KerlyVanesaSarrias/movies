@@ -1,6 +1,6 @@
 export const MOVIES_PATHS = {
     all: '/',
-    detail: '/detail',
+    detail: '//movie/:id',
     favorites: '/favorites',
 };
 

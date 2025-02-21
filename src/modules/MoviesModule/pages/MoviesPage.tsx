@@ -177,8 +177,7 @@ const MoviesPage = () => {
                             <ThumbnailMedia
                                 key={id}
                                 thumbnail={`https://image.tmdb.org/t/p/w500${poster_path}`}
-                                onFavoriteClick={() => alert('favotire')}
-                                isFavorite={false}
+                                movieId={item.id}
                                 title={title}
                                 rating={item.vote_average}
                             />
