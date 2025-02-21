@@ -8,31 +8,20 @@ export type NavItem = {
 };
 interface NavHeaderProps {
     navItems: NavItem[];
-    subHeader?: boolean;
 }
-const NavHeader = ({ navItems, subHeader = false }: NavHeaderProps) => {
+const NavHeader = ({ navItems }: NavHeaderProps) => {
     const location = useLocation();
-    const ulClasses = classNames('flex gap-2  h-full items-center nav', {
-        'text-white': !subHeader,
-        'text-black text-xs sm:text-sm': subHeader,
-    });
+    console.log(location);
+    const ulClasses = classNames(
+        'flex gap-2 h-full items-center nav text-white'
+    );
 
-    const liActiveClasses = classNames({
-        active: !subHeader,
-        'active-subheader text-slate-700': subHeader,
-    });
+    const liActiveClasses = classNames('active');
 
-    const liClasses = classNames({
-        'hover:!text-gray-500': !subHeader,
-        'hover:!text-gray-200': subHeader,
-    });
+    const liClasses = classNames('hover:!text-gray-500');
 
     const matchPathnames = (path: string) => {
-        if (subHeader) {
-            return location.pathname === path;
-        } else {
-            return location.pathname.includes(path);
-        }
+        return location.pathname === path;
     };
 
     return (

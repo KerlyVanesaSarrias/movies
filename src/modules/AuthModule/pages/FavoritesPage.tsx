@@ -50,6 +50,7 @@ const FavoritesPage = () => {
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-5">
                     {data.results.map((movie) => (
                         <ThumbnailMedia
+                            isFavorite
                             key={movie.id}
                             movieId={movie.id}
                             thumbnail={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}

@@ -1,10 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { MovieDetail, MoviesListResponse } from '../types';
-import {
-    getFavoritesLS,
-    getUserAuthenticatedLS,
-    setFavoritesLS,
-} from '../../AuthModule/helpers/localStorageData';
+import { getUserAuthenticatedLS } from '../../AuthModule/helpers/localStorageData';
+import { toast } from 'react-toastify';
 
 const TOKEN =
     'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzZDUwMGFmZGY1ZTkwZWI2ZjcwM2Y1MjE0OWMxOTE5ZSIsIm5iZiI6MTczOTg5NjIwMC44MTksInN1YiI6IjY3YjRiNTg4MGQ4N2I0ZGNjYjZkYTg4ZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Wt6EzOLs8mMeI55vbscbSkfQW4XryV_iW9xy2A6m8XA';
@@ -74,7 +71,9 @@ export const moviesApi = createApi({
         getFavorites: builder.query<MoviesListResponse, void>({
             query: () => {
                 const user = getUserAuthenticatedLS();
-                if (!user) throw new Error('User not authenticated');
+                if (!user) {
+                    toast.warning('User not authenticated');
+                }
                 return {
                     url: '/account/21826861/favorite/movies',
                     params: { language: 'en-US', api_key: TOKEN },
@@ -89,9 +88,11 @@ export const moviesApi = createApi({
         >({
             query: ({ movieId, favorite }) => {
                 const user = getUserAuthenticatedLS();
-                if (!user) throw new Error('User not authenticated');
+                if (!user) {
+                    toast.warning('You need login to view this page');
+                }
                 return {
-                    url: `/account/${user.email}/favorite`,
+                    url: `/account/${user?.email}/favorite`,
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: {
@@ -102,19 +103,9 @@ export const moviesApi = createApi({
                     params: { api_key: TOKEN },
                 };
             },
-            async onQueryStarted(
-                { movieId, favorite },
-                { dispatch, queryFulfilled }
-            ) {
+            async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 try {
                     await queryFulfilled;
-
-                    const currentFavorites = getFavoritesLS();
-                    const updatedFavorites = favorite
-                        ? [...currentFavorites, movieId]
-                        : currentFavorites.filter((id) => id !== movieId);
-
-                    setFavoritesLS(updatedFavorites);
 
                     dispatch(moviesApi.util.invalidateTags(['Favorites']));
                 } catch (error) {

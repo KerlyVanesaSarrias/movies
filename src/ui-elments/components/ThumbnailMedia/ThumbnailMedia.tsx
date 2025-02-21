@@ -3,18 +3,14 @@ import { Card } from '../Card';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 import { HeartIcon } from '@heroicons/react/24/outline';
 import { Rating } from '../Rating';
-import { useToggleFavoriteMutation } from '../../../modules/MoviesModule/slices/movieApi';
-import {
-    getFavoritesLS,
-    setFavoritesLS,
-} from '../../../modules/AuthModule/helpers/localStorageData';
 
 interface ThumbnailMediaProps {
     movieId: number;
     thumbnail: string;
     title?: string;
     rating?: number;
-    onFavoriteClick?: () => void;
+    onFavoriteClick?: (movieId: number, isFavorite: boolean) => void;
+    isFavorite?: boolean;
 }
 
 const ThumbnailMedia = ({
@@ -22,26 +18,13 @@ const ThumbnailMedia = ({
     thumbnail,
     rating = 0,
     onFavoriteClick,
+    isFavorite,
 }: ThumbnailMediaProps) => {
-    const [toggleFavorite] = useToggleFavoriteMutation();
-    const favorites = getFavoritesLS();
-    const isFavorite = favorites.includes(movieId);
-
     const handleFavoriteClick = async (
         event: MouseEvent<HTMLButtonElement>
     ) => {
         event.stopPropagation();
-
-        const newFavorites = isFavorite
-            ? favorites.filter((id: number) => id !== movieId)
-            : [...favorites, movieId];
-
-        setFavoritesLS(newFavorites);
-        await toggleFavorite({ movieId, favorite: !isFavorite });
-
-        if (onFavoriteClick) {
-            onFavoriteClick();
-        }
+        onFavoriteClick?.(movieId, !isFavorite);
     };
 
     return (

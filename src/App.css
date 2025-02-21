@@ -11,5 +11,5 @@ body {
 }
 
 .dark_bg {
-    @apply dark:bg-slate-900 bg-slate-200;
+    @apply dark:bg-green-800 bg-slate-200;
 }

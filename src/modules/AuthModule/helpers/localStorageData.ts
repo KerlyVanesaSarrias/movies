@@ -14,12 +14,3 @@ export const getUserAuthenticatedLS = (): User | null => {
 export const clearUserAuthenticatedLS = () => {
     localStorage.removeItem(USER_KEY);
 };
-
-export const setFavoritesLS = (favorites: number[]) => {
-    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
-};
-
-export const getFavoritesLS = (): number[] => {
-    const favorites = localStorage.getItem(FAVORITES_KEY);
-    return favorites ? JSON.parse(favorites) : [];
-};

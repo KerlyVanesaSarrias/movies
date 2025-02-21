@@ -15,6 +15,7 @@ import { RootState } from '../../../store';
 import { setQuery } from '../slices/searchSlice';
 import Select from '../../../ui-elments/components/Select/Select';
 import { useNavigate } from 'react-router-dom';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 const MoviesPage = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -145,17 +146,17 @@ const MoviesPage = () => {
 
                 <div className="dark_text flex items-center  gap-5">
                     <Button
+                        label={<FaChevronLeft />}
                         color="secondary"
-                        label="Previous"
                         onClick={() => dispatch(prevPage())}
                         disabled={currentPage === 1}
                     />
                     <span>
-                        Página {currentPage} de {totalPages}
+                        Page {currentPage} of {totalPages}
                     </span>
                     <Button
                         color="secondary"
-                        label="Next"
+                        label={<FaChevronRight />}
                         onClick={() => dispatch(nextPage())}
                         disabled={currentPage >= totalPages}
                     />

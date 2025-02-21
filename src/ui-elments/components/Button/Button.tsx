@@ -9,7 +9,7 @@ type ButtonSize = 'small' | 'medium';
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     color?: ButtonColor;
     size?: ButtonSize;
-    label: string;
+    label: string | JSX.Element;
     iconLeft?: JSX.Element;
     iconRight?: JSX.Element;
     isLoading?: boolean;
